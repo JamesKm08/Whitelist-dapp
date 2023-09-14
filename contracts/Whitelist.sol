@@ -6,7 +6,6 @@ contract Whitelist {
     //Declare a variable to check the number of addresses whitelisted
     uint256 public numWhitelistedAdd;
 
-   
     //mapping the addresses to a boolean value.
     //True if whitelisted, false if not
     mapping(address => bool) public whitelistedAddresses;
