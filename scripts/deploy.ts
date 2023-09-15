@@ -1,26 +1,32 @@
-import { ethers } from "hardhat";
+const hre = require("hardhat");
 
-async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
-
-  const lockedAmount = ethers.parseEther("0.001");
-
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
-
-  await lock.waitForDeployment();
-
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
+async function main() {
+  //deploy the contract using ethers.js
+  //Add the value of the maximum number of addresses gfpr the whitelist
+  const whitelistContract = await hre.ethers.deployContract("Whitelist",[5]);
+  
+  //wait for the contract to deploy
+  await whitelistContract.waitForDeployment();
+
+  //print out the deployed address
+  console.log("Whitelist Contract Address:", whitelistContract.target);
+
+  // Sleep for 30 seconds while Etherscan indexes the new contract deployment
+  await sleep(30 * 1000); // 30s = 30 * 1000 milliseconds
+
+  // Verify the contract on etherscan
+  await hre.run("verify:verify", {
+    address: whitelistContract.target,
+    constructorArguments: [5],
+    });
+
+  }
+  
+// Check and handle errors
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
