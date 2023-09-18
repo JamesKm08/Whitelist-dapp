@@ -7,7 +7,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY as string;
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 
 const config: HardhatUserConfig = {
-  solidity: "^0.8.19",
+  solidity: "0.8.19",
   networks: {
     sepolia: {
       url: INFURA_HTTP_URL,
